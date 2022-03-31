@@ -2,12 +2,12 @@
 
 ## 목차
 
-### [1. runBlocking (CoroutineBuilder)](#1-runBlocking-CoroutineBuilder)
-### [2. launch (CoroutineBuilder)](#2-launch-(CoroutineBuilder))
+### [1. runBlocking (CoroutineBuilder)](#1-runBlocking)
+### [2. launch (CoroutineBuilder)](#2-launch)
 ### [3. suspend](#3-suspend)
-### [3. suspend](#3-suspend)
+### [4. join](#4-join)
 
-### 1. runBlocking (CoroutineBuilder)
+### 1. runBlocking
 코드 블록이 수행이 끝날 때까지 thread를 blocking하고 작업을 실행하기 때문에 Test 용도에 사용하는 것을 권장
 
 <br>
@@ -33,7 +33,7 @@ Hello
 
 
 
-### 2. launch (CoroutineBuilder)
+### 2. launch
 thread를 blocking 하지 않는 코루틴 작업을 실행하며, 결과를 반환할 필요가 없는 작업에 사용하며 Job 객체를 반환
 
 <br>
@@ -181,9 +181,153 @@ launch1: main
 
 
 
+### 4. join
+코루틴 빌더인 launch는 Job 객체를 반환하며 이 Job 객체를 통해 이 Job을 대기, 취소 등의 핸들링이 가능
+중요한 점은 join()이 호출된 시점부터 해당 Job 객체에 대한 처리를 기다린 후 아래 코드를 실행한다는 것
+즉, join()이 호출되는 위치에 따라 결과가 달라질 수 있음.
+
+<br>
+
+* 예제 1 :  join()이 없는 경우 4 -> 1 -> 2 -> 3 -> 5 순으로 출력됨
+``` kotlin
+import kotlinx.coroutines.*
+
+suspend fun doOneTwoThree() = coroutineScope {
+    val job = launch {
+        println("launch1: ${Thread.currentThread().name}")
+        delay(1000L)
+        println("3!")
+    }
+    
+    job.join()
+
+    launch {
+        println("launch2: ${Thread.currentThread().name}")
+        println("1!")
+    }
+
+    launch {
+        println("launch3: ${Thread.currentThread().name}")
+        delay(500L)
+        println("2!")
+    }
+    println("4!")
+}
+
+fun main() = runBlocking {
+    doOneTwoThree()
+    println("runBlocking: ${Thread.currentThread().name}")
+    println("5!")
+}
+```
+
+```
+launch1: main
+3!
+4!
+launch2: main
+1!
+launch3: main
+2!
+runBlocking: main
+5!
+```
+<br>
+
+* 예제 2 :  join()이 없는 경우 4 -> 1 -> 2 -> 3 -> 5 순으로 출력됨
+``` kotlin
+import kotlinx.coroutines.*
+
+suspend fun doOneTwoThree() = coroutineScope {
+    val job = launch {
+        println("launch1: ${Thread.currentThread().name}")
+        delay(1000L)
+        println("3!")
+    }
+
+    launch {
+        println("launch2: ${Thread.currentThread().name}")
+        println("1!")
+    }
+
+    job.join()
+
+    launch {
+        println("launch3: ${Thread.currentThread().name}")
+        delay(500L)
+        println("2!")
+    }
+    println("4!")
+}
+
+fun main() = runBlocking {
+    doOneTwoThree()
+    println("runBlocking: ${Thread.currentThread().name}")
+    println("5!")
+}
+```
+
+```
+launch1: main
+launch2: main
+1!
+3!
+4!
+launch3: main
+2!
+runBlocking: main
+5!
+```
+<br>
+
+* 예제 3 : join()이 없는 경우 4 -> 1 -> 2 -> 3 -> 5 순으로 출력됨
+``` kotlin
+import kotlinx.coroutines.*
+
+suspend fun doOneTwoThree() = coroutineScope {
+    val job = launch {
+        println("launch1: ${Thread.currentThread().name}")
+        delay(1000L)
+        println("3!")
+    }
+
+    launch {
+        println("launch2: ${Thread.currentThread().name}")
+        println("1!")
+    }
+
+    launch {
+        println("launch3: ${Thread.currentThread().name}")
+        delay(500L)
+        println("2!")
+    }
+
+    job.join()
+    println("4!")
+}
+
+fun main() = runBlocking {
+    doOneTwoThree()
+    println("runBlocking: ${Thread.currentThread().name}")
+    println("5!")
+}
+```
+
+```
+launch1: main
+launch2: main
+1!
+launch3: main
+2!
+3!
+4!
+runBlocking: main
+5!
+```
+<br>
 
 
-
+취소와 타임아웃
 
 
 ``` kotlin

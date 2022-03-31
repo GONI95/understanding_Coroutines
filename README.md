@@ -1,6 +1,10 @@
 # 👋 understanding_Coroutines <br> 📌실습을 통한 코루틴 이해
 
-### 1. runBlocking (Coroutine Builder)
+## 목차
+
+[1. runBlocking](#1-runBlocking)
+
+### 1. runBlocking
 코드 블록이 수행이 끝날 때까지 thread를 blocking하고 작업을 실행하기 때문에 Test 용도에 사용하는 것을 권장
 
 <br>

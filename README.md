@@ -2,9 +2,12 @@
 
 ## 목차
 
-[1. runBlocking](#1-runBlocking)
+### [1. runBlocking (CoroutineBuilder)](#1-runBlocking-CoroutineBuilder)
+### [2. launch (CoroutineBuilder)](#2-launch-(CoroutineBuilder))
+### [3. suspend](#3-suspend)
+### [3. suspend](#3-suspend)
 
-### 1. runBlocking
+### 1. runBlocking (CoroutineBuilder)
 코드 블록이 수행이 끝날 때까지 thread를 blocking하고 작업을 실행하기 때문에 Test 용도에 사용하는 것을 권장
 
 <br>
@@ -30,7 +33,7 @@ Hello
 
 
 
-### 2. launch (Coroutine Builder)
+### 2. launch (CoroutineBuilder)
 thread를 blocking 하지 않는 코루틴 작업을 실행하며, 결과를 반환할 필요가 없는 작업에 사용하며 Job 객체를 반환
 
 <br>

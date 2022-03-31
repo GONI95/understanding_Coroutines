@@ -4,8 +4,8 @@
 
 ### [1. runBlocking (CoroutineBuilder)](#1-runBlocking)
 ### [2. launch (CoroutineBuilder)](#2-launch)
-### [3. suspend](#3-suspend)
-### [4. join](#4-join)
+### [3. suspend!!](#3-suspend)
+### [4. join!!](#4-join)
 
 ### 1. runBlocking
 코드 블록이 수행이 끝날 때까지 thread를 blocking하고 작업을 실행하기 때문에 Test 용도에 사용하는 것을 권장
